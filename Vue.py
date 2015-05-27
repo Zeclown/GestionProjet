@@ -34,11 +34,22 @@ class Vue():
         
     def creerFrameOuvrirProjet(self):
            self.frameOuvrirProjet = Frame(self.canevas,width=200, height=200, bg="red")
-           self.buttonFyall = Button(self.frameOuvrirProjet, text = "VELOCIRAPTOR!", bg="blue")
-           self.buttonFyall.pack()
+           self.labelNom=Label(self.frameOuvrirProjet, text="Projets", bg="#AC30D6")
+           self.labelNom.pack()
+           self.listeProjet=Listbox(self.frameOuvrirProjet)
+           self.listeProjet.pack()
+           self.buttonLoad = Button(self.frameOuvrirProjet, text = "LOAD", bg="pink")
+           self.buttonLoad.pack(side=LEFT,padx=20)
+           self.buttonDelete = Button(self.frameOuvrirProjet, text = "DELETE")
+           self.buttonDelete.pack(side=LEFT,padx=20)
     def frameOuvrirProjet(self):
     	  self.swapper(self.frameOuvrirProjet)   
-
+    
+    def creerFrameAfficherProjet(self):#####
+        pass
+    def frameAfficherProjet(self):#####
+        pass
+    
 class FrameMenu(Frame):
     def __init__(self,master,vue,**kw):
         self.vue=vue
