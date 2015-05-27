@@ -19,12 +19,21 @@ class Vue():
         self.frameMenu.pack_propagate(False)
         self.frameMenu.pack()
         self.root.mainloop()
+ #####################################################################
+
+    
+
+ ######################################################################
 class FrameMenu(Frame):
     def __init__(self,master,vue,**kw):
         self.vue=vue
         Frame.__init__(self,master,**kw) #init de la classe dont j'herite
         self.BouttonCreer=Button(self,relief=RIDGE,overrelief=GROOVE,text="Nouveau Projet",bg="#AC30D6")
         self.BouttonCreer.pack(pady=20)
-        self.BouttonOuvrir=Button(self,relief=RIDGE,overrelief=GROOVE,text="Projet Existant",bg="#AC30D6")
+        self.BouttonOuvrir=Button(self,relief=RIDGE,overrelief=GROOVE,text="Projet Existant",bg="#AC30D6", command=self.frameOuvrirProjet)
         self.BouttonOuvrir.pack()
-        
+    def frameOuvrirProjet(self):
+        self.frameOuvrirProjet = Frame(width=200, height=200, bg="red")
+        self.frameOuvrirProjet.pack()
+        self.buttonFyall = Button(frameOuvrirProjet, text = "VELOCIRAPTOR!", bg="blue")
+        self.buttonFyall.pack()
