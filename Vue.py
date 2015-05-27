@@ -43,15 +43,9 @@ class FrameMenu(Frame):
     def __init__(self,master,vue,**kw):
         self.vue=vue
         Frame.__init__(self,master,**kw) #init de la classe dont j'herite
-        self.BouttonCreer=Button(self,relief=RIDGE,overrelief=GROOVE,text="Nouveau Projet",bg="#AC30D6")
-        self.BouttonCreer.pack(pady=20)
-        self.BouttonOuvrir=Button(self,relief=RIDGE,overrelief=GROOVE,text="Projet Existant",bg="#AC30D6", command=self.vue.frameOuvrirProjet)
-        self.BouttonOuvrir.pack()
-    
-
         self.bouttonCreer=Button(self,relief=RIDGE,overrelief=GROOVE,text="Nouveau Projet",bg="#AC30D6",command=self.vue.nouveauProjet)
         self.bouttonCreer.pack(pady=20)
-        self.bouttonOuvrir=Button(self,relief=RIDGE,overrelief=GROOVE,text="Projet Existant",bg="#AC30D6")
+        self.bouttonOuvrir=Button(self,relief=RIDGE,overrelief=GROOVE,text="Projet Existant",bg="#AC30D6",command=self.vue.frameOuvrirProjet)
         self.bouttonOuvrir.pack()
 class FrameProjet(Frame):
     def __init__(self,master,vue,**kw):
