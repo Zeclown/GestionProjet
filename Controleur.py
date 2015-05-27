@@ -20,8 +20,6 @@ class Controleur():
 
     def menu(self):
         self.vue.menu()
-    def ajouterMembre(self):
-        pass
     
 if __name__ == '__main__':
     c=Controleur()

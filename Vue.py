@@ -4,6 +4,7 @@ class Vue():
         self.parent=parent
         self.longueur=longueur
         self.hauteur=hauteur
+        self.listeMembres=[]
         self.root=Tk()
         self.root.resizable(0,0)
         self.root.title("Project Manager 1337")
@@ -61,6 +62,19 @@ class FrameMenu(Frame):
 class FrameProjet(Frame):
     def __init__(self,master,vue,**kw):
         self.vue=vue
+        self.calendrierMois=["Janvier","Fevrier","Mars","Avril","Mai","Juin","Juillet","Aout","Septembre","Octobre","Novembre","Decembre"]
+        self.joursParMois={"Janvier":31
+                           ,"Fevrier":28
+                           ,"Mars":31
+                           ,"Avril":30
+                           ,"Mai":31
+                           ,"Juin":30
+                           ,"Juillet":31
+                           ,"Aout":31
+                           ,"Septembre":30
+                           ,"Octobre":31
+                           ,"Novembre":30
+                           ,"Decembre":31}
         Frame.__init__(self,master,**kw) #init de la classe dont j'herite
         self.labelNom=Label(self,text="Nom du Projet ",bg="#AC30D6")
         self.labelNom.grid(column=0,row=0,padx=10,pady=10)
@@ -82,11 +96,25 @@ class FrameProjet(Frame):
         self.listboxMembres=Listbox(self.frameMembres,bg="#AC30D6",yscrollcommand=self.scrollbar.set)
         self.listboxMembres.grid(column=0,row=1)
         self.scrollbar.config(command=self.listboxMembres.yview)
+        self.buttonEnleverMembre=Button(self,text="Enlever",command=self.enleverMembre)
+        self.buttonEnleverMembre.grid(column=2,row=2)
+        self.labelDebut=Label(self,text="Debut du Projet: ",bg="#AC30D6")
+        self.labelDebut.grid(column=0,row=3)
+        self.spinBoxMois=Spinbox(self,values=self.calendrierMois,command=self.dateUpdate)
+        self.spinBoxMois.grid(column=0,row=4)
+        self.spinBoxDate=Spinbox(self,from_=1 ,to=self.joursParMois[self.spinBoxMois.get()])
+        self.spinBoxDate.grid(column=1,row=4)
+        self.labelFin=Label(self,text="Fin du Projet")
         
+    def dateUpdate(self): 
+        self.spinBoxDate.config(from_=1 ,to=self.joursParMois[self.spinBoxMois.get()])  
     def ajouterMembre(self):
         if(self.entryMembre.get()!=""):
             self.listboxMembres.insert(END,self.entryMembre.get())
-            self.vue.parent.ajouterMembre()
+            self.vue.listeMembres.append(self.entryMembre.get())
+    def enleverMembre(self):
+        self.vue.listeMembres.pop(self.listboxMembres.index(ACTIVE))
+        self.listboxMembres.delete(self.listboxMembres.index(ACTIVE))
         
         
 
