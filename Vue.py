@@ -23,7 +23,7 @@ class Vue():
             self.canevas.create_line(0,self.hauteur,self.longueur,i*20,fill="#AC30D6") 
         self.swapper(self.frameMenu)
         self.root.mainloop()
-
+    
     def nouveauProjet(self):
         self.swapper(self.frameProjet)
     def swapper(self,frame):
@@ -32,12 +32,12 @@ class Vue():
         self.frameAffiche=frame
         self.frameAffiche.pack()
         
-	def creerFrameOuvrirProjet(self):
-	   self.frameOuvrirProjet = Frame(width=200, height=200, bg="red")
-	   self.buttonFyall = Button(frameOuvrirProjet, text = "VELOCIRAPTOR!", bg="blue")
-	   self.buttonFyall.pack()
-	def frameOuvrirProjet(self):
-		self.swapper(self.frameOuvrirProjet)   
+    def creerFrameOuvrirProjet(self):
+           self.frameOuvrirProjet = Frame(self.canevas,width=200, height=200, bg="red")
+           self.buttonFyall = Button(self.frameOuvrirProjet, text = "VELOCIRAPTOR!", bg="blue")
+           self.buttonFyall.pack()
+    def frameOuvrirProjet(self):
+    	  self.swapper(self.frameOuvrirProjet)   
 
 class FrameMenu(Frame):
     def __init__(self,master,vue,**kw):
