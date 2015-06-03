@@ -51,7 +51,12 @@ class Vue():
         self.swapper(self.frameOuvrirProjet)   
     
     def deleteProjet(self):
+        delProjet = self.listeProjet.get(self.listeProjet.curselection())
+        print(delProjet)
+        delProjet = str(delProjet[1])
+        self.parent.modele.effacerProjet(delProjet) #####ICI!!!!!!!!!!!!!!!!!!!!!
         self.listeProjet.delete(self.listeProjet.index(ACTIVE))
+        print(delProjet)
         print("Project successfully deleted")
     
     def creerFrameAfficherProjet(self):#####
