@@ -12,7 +12,7 @@ class Controleur():
         c.execute("CREATE TABLE IF NOT EXISTS Taches (EtapeId int,id int,nom text, duree reel,sprintId int,responsableId int,completion int, priorite int,PRIMARY KEY (id),FOREIGN KEY (sprintId) REFERENCES Sprints(id),FOREIGN KEY (responsableId) REFERENCES Membres(id) ) ")
         c.execute("CREATE TABLE IF NOT EXISTS Sprints (projetId int, id int, nom text,PRIMARY KEY (id),FOREIGN KEY (projetId) REFERENCES Projets(id)) ")
         c.execute("CREATE TABLE IF NOT EXISTS TachesPrerequis (tacheId int, prerequisId int,FOREIGN KEY (tacheId) REFERENCES Taches(id),FOREIGN KEY (prerequisId) REFERENCES Taches(id))")
-
+        
         self.modele=Modele(self)
         self.vue=Vue(self,self.modele.largeur,
                      self.modele.hauteur)
