@@ -41,13 +41,22 @@ class Vue():
            self.listeProjet.pack()
            self.buttonLoad = Button(self.frameOuvrirProjet, text = "LOAD", bg="pink")
            self.buttonLoad.pack(side=LEFT,padx=20)
-           self.buttonDelete = Button(self.frameOuvrirProjet, text = "DELETE")
+           self.buttonDelete = Button(self.frameOuvrirProjet, text = "DELETE", command=self.deleteProjet)
            self.buttonDelete.pack(side=LEFT,padx=20)
     def frameOuvrirProjet(self):
-    	  self.swapper(self.frameOuvrirProjet)   
+        nomDeProjets = self.parent.modele.listeProjet()
+        for nom in nomDeProjets:
+            self.listeProjet.insert(END, nom)
+        #print(nomDeProjets)
+        self.swapper(self.frameOuvrirProjet)   
+    
+    def deleteProjet(self):
+        self.listeProjet.delete(self.listeProjet.index(ACTIVE))
+        print("Project successfully deleted")
     
     def creerFrameAfficherProjet(self):#####
         pass
+    
     def frameAfficherProjet(self):#####
         pass
     
