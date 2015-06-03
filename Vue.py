@@ -104,9 +104,21 @@ class FrameProjet(Frame):
         self.spinBoxMois.grid(column=0,row=4)
         self.spinBoxDate=Spinbox(self,from_=1 ,to=self.joursParMois[self.spinBoxMois.get()])
         self.spinBoxDate.grid(column=1,row=4)
-        self.labelFin=Label(self,text="Fin du Projet")
-        
-    def dateUpdate(self): 
+        self.labelFin=Label(self,text="Fin du Projet",bg="#AC30D6")
+        self.labelFin.grid(column=0,row=5)
+        self.spinBoxMois1=Spinbox(self,values=self.calendrierMois,command=self.dateUpdate)
+        self.spinBoxMois1.grid(column=0,row=6)
+        self.spinBoxDate1=Spinbox(self,from_=1 ,to=self.joursParMois[self.spinBoxMois1.get()])
+        self.spinBoxDate1.grid(column=1,row=6)
+        self.buttonSuivant=Button(self,text="Debut du Projet: ",bg="#AC30D6",command=self.suivant)
+    def suivant(self):
+        self.projet={}
+        self.projet["nom"]=self.entryNom.get()
+        self.projet["membres"]=self.listboxMembres.get(0, END)
+        self.projet["Debut Projet"]=(self.spinBoxDate.get(),self.spinBoxMois.get())
+        self.projet["Fin Projet"]=(self.spinBoxDate1.get(),self.spinBoxMois1.get())   
+    def dateUpdate(self):
+        self.spinBoxDate1.config(from_=1 ,to=self.joursParMois[self.spinBoxMois1.get()])  
         self.spinBoxDate.config(from_=1 ,to=self.joursParMois[self.spinBoxMois.get()])  
     def ajouterMembre(self):
         if(self.entryMembre.get()!=""):
