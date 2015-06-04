@@ -25,3 +25,7 @@ class Modele():
         self.c.execute("SELECT projet, id FROM Projets")
         return (self.c.fetchall())
 
+    
+    def effacerProjet(self, delProjet):
+        self.c.execute("DELETE FROM Projets WHERE id=(?)", (delProjet))
+
