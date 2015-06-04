@@ -45,11 +45,20 @@ class Vue():
            self.listeProjet.pack()
            self.buttonLoad = Button(self.frameOuvrirProjet, text = "LOAD", bg="pink")
            self.buttonLoad.pack(side=LEFT,padx=20)
-           self.buttonDelete = Button(self.frameOuvrirProjet, text = "DELETE")
+           self.buttonDelete = Button(self.frameOuvrirProjet, text = "DELETE", command=self.deleteProjet)
            self.buttonDelete.pack(side=LEFT,padx=20)
     def frameOuvrirProjet(self):
-    	  self.swapper(self.frameOuvrirProjet)   
+        nomDeProjets = self.parent.modele.listeProjet()
+        for nom in nomDeProjets:
+            self.listeProjet.insert(END, nom)
+        #print(nomDeProjets)
+        self.swapper(self.frameOuvrirProjet)   
     
+    def deleteProjet(self):
+        self.listeProjet.delete(self.listeProjet.index(ACTIVE))
+        print("Project successfully deleted")
+    
+
     def ouvrirEtape(self,etape):
         self.frameEtape.labelNom.config(text=etape["Nom"])
         taches=etape["Taches"]
@@ -58,6 +67,13 @@ class Vue():
          
         
         
+
+    def creerFrameAfficherProjet(self):#####
+        pass
+    
+    def frameAfficherProjet(self):#####
+        pass
+
     
 class FrameMenu(Frame):
     def __init__(self,master,vue,**kw):
@@ -102,7 +118,7 @@ class FrameProjetSuivant(Frame):
     def ajouterEtape(self):
         if(self.entryEtape.get()!=""):
             self.listboxEtape.insert(END,self.entryEtape.get())
-            self.vue.listeEtape.append({"Nom":self.entryEtape.get()})
+            self.vue.listeEtape.append({"Nom":self.entryEtape.get(),"Taches":[]})
             
         self.ouvrirEtape(len(self.vue.listeEtape)-1)
     def enleverEtape(self):
@@ -200,6 +216,7 @@ class FrameProjet(Frame):
         self.buttonSuivant=Button(self,text="Debut du Projet: ",bg="#AC30D6",command=self.suivant)
         self.buttonSuivant.grid(column=0,row=7)
         self.buttonSauvegarderProjet=Button(self,text="Sauvegarde du Projet: ",bg="#AC30D6",command=self.sauvegarde)
+        self.buttonSauvegarderProjet.grid(column=1,row=7)
     def suivant(self):
         self.projet["nom"]=self.entryNom.get()
         self.projet["membres"]=self.listboxMembres.get(0, END)
@@ -222,6 +239,6 @@ class FrameProjet(Frame):
         self.projet["membres"]=self.listboxMembres.get(0, END)
         self.projet["Debut Projet"]=(self.spinBoxDate.get(),self.spinBoxMois.get())
         self.projet["Fin Projet"]=(self.spinBoxDate1.get(),self.spinBoxMois1.get())
-        self.vue.parent.modele.sauvegarde(self.projet)   
+        self.vue.parent.modele.sauvegardeNouveau(self.projet)   
         
 
