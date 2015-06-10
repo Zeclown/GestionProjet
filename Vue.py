@@ -113,13 +113,16 @@ class FrameProjetSuivant(Frame):
         self.buttonEnleverEtape.grid(column=2,row=2)
         self.buttonModifierEtape=Button(self,text="Ouvrir",command=self.ouvrirEtape)
         self.buttonModifierEtape.grid(column=3,row=2)
-        
-        
+        self.buttonSauvegardeQuitter=Button(self,text="Savegarder et quitter",command=self.updateProjet)
+        self.buttonSauvegardeQuitter.grid(column=3,row=1)
         self.labelEtapeChoisie=Label(self,text="")
         self.spinBoxPriorite=Spinbox(self,from_=0, to=10)
         self.labelPriorite=Label(self,text="Priorite")
         
+    def updateProjet(self):
         
+        self.projet["etape"]=self.listboxEtape.get(0, END)
+        self.vue.parent.modele.updateProjet(self.projet)   
     def ajouterEtape(self):
         if(self.entryEtape.get()!=""):
             self.listboxEtape.insert(END,self.entryEtape.get())
@@ -225,8 +228,10 @@ class FrameProjet(Frame):
     def suivant(self):
         self.projet["nom"]=self.entryNom.get()
         self.projet["membres"]=self.listboxMembres.get(0, END)
-        self.projet["Debut Projet"]=(self.spinBoxDate.get(),self.spinBoxMois.get())
-        self.projet["Fin Projet"]=(self.spinBoxDate1.get(),self.spinBoxMois1.get())
+        self.projet["debut Projet"]=(self.spinBoxDate.get(),self.spinBoxMois.get())
+        self.projet["fin Projet"]=(self.spinBoxDate1.get(),self.spinBoxMois1.get())
+        self.vue.parent.modele.sauvegardeNouveau(self.projet)
+        self.projet.clear()
         self.vue.swapper(self.vue.frameProjetSuivant)   
     def dateUpdate(self):
         self.spinBoxDate1.config(from_=1 ,to=self.joursParMois[self.spinBoxMois1.get()])  
@@ -242,8 +247,10 @@ class FrameProjet(Frame):
     def sauvegarde(self):
         self.projet["nom"]=self.entryNom.get()
         self.projet["membres"]=self.listboxMembres.get(0, END)
-        self.projet["Debut Projet"]=(self.spinBoxDate.get(),self.spinBoxMois.get())
-        self.projet["Fin Projet"]=(self.spinBoxDate1.get(),self.spinBoxMois1.get())
-        self.vue.parent.modele.sauvegardeNouveau(self.projet)   
+        self.projet["debut Projet"]=(self.spinBoxDate.get(),self.spinBoxMois.get())
+        self.projet["fin Projet"]=(self.spinBoxDate1.get(),self.spinBoxMois1.get())
+        self.vue.parent.modele.sauvegardeNouveau(self.projet)
+        self.projet.clear()
+        self.vue.menu()
         
 
