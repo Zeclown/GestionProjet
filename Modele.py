@@ -9,7 +9,7 @@ class Modele():
         self.c.execute("CREATE TABLE IF NOT EXISTS Projets (id INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE,projet text , debut date, fin date )")
         self.c.execute("CREATE TABLE IF NOT EXISTS Etapes (id INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE,projetId int,  nom text, duree int,priorite int ,FOREIGN KEY (projetId) REFERENCES Projets(id) ON DELETE CASCADE) ")
         self.c.execute("CREATE TABLE IF NOT EXISTS Membres (id INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE,nom text,projetId int,FOREIGN KEY (projetId) REFERENCES Projets(id) ON DELETE CASCADE)")
-        self.c.execute("CREATE TABLE IF NOT EXISTS Taches (id INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE,etapeId int,nom text, duree reel,sprintId int,responsableId int,completion int, priorite int,PRIMARY KEY (id),FOREIGN KEY (sprintId) REFERENCES Sprints(id) ON DELETE CASCADE, FOREIGN KEY (responsableId) REFERENCES Membres(id) ON DELETE CASCADE) ")
+        self.c.execute("CREATE TABLE IF NOT EXISTS Taches (id INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE,etapeId int,nom text, duree reel,sprintId int,responsableId int,completion int, priorite int,FOREIGN KEY (sprintId) REFERENCES Sprints(id) ON DELETE CASCADE, FOREIGN KEY (responsableId) REFERENCES Membres(id) ON DELETE CASCADE) ")
         self.c.execute("CREATE TABLE IF NOT EXISTS Sprints (id INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE,projetId int,nom text,FOREIGN KEY (projetId) REFERENCES Projets(id) ON DELETE CASCADE) ")
         self.c.execute("CREATE TABLE IF NOT EXISTS TachesPrerequis (tacheId int, prerequisId int,FOREIGN KEY (tacheId) REFERENCES Taches(id) ON DELETE CASCADE,FOREIGN KEY (prerequisId) REFERENCES Taches(id) ON DELETE CASCADE)")
         
@@ -45,8 +45,8 @@ class Modele():
                 if(i[3]):
                     self.c.execute("DELETE FROM Taches WHERE etapeId=" + id)
                     for i in projet["etapes"]:
-                        self.c.execute("INSERT INTO Taches(id,etapeId,nom,duree,sprintId,responsableId,completion,priorite) VALUES(NULL,"+id+",'" + i[0]+","+ i[1]+","+i[2]+")")
-               
+                        self.c.execute("INSERT INTO Taches(id,etapeId,nom,duree,sprintId,responsableId,completion,priorite) VALUES(NULL,"+idEtape+",'" + i[0]+","+ i[1]+","+i[2]+")")
+                        
          
         
         self.conn.commit()

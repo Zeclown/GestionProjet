@@ -79,10 +79,11 @@ class Vue():
         
         
     def ouvrirEtape(self,etape):
-        self.frameEtape.labelNom.config(text=etape["Nom"])
-        taches=etape["Taches"]
+        self.frameEtape.labelNom.config(text=self.listeEtape[etape]["Nom"])
+        taches=self.listeEtape[etape]["Taches"]
         for tache in taches:
             self.frameEtape.listeboxTache.insert(END,tache["Nom"])
+        self.swapper(self.frameEtape)
          
         
         
@@ -141,20 +142,22 @@ class FrameProjetSuivant(Frame):
         if(self.entryEtape.get()!=""):
             self.listboxEtape.insert(END,self.entryEtape.get())
             self.vue.listeEtape.append({"Nom":self.entryEtape.get(),"Taches":[]})
-            
-        self.ouvrirEtape(len(self.vue.listeEtape)-1)
+        self.listboxEtape.activate(self.listboxEtape.index(ACTIVE))    
+        self.ouvrirEtape()
     def enleverEtape(self):
         if(self.listeboxEtape.index(ACTIVE)):
             self.vue.listeEtape.pop(self.listboxEtape.index(ACTIVE))
             self.listboxEtape.delete(self.listboxEtape.index(ACTIVE))
-    def ouvrirEtape(self,index):
-        self.etapeChoisie=self.vue.listeEtape[index]
+    def ouvrirEtape(self):
+        self.etapeChoisie=self.listboxEtape.index(ACTIVE)
         self.vue.ouvrirEtape(self.etapeChoisie)
         
         
 class FrameEtape(Frame):
     def __init__(self,master,vue,**kw):
          Frame.__init__(self,master,**kw) #init de la classe dont j'herite
+         self.vue=vue
+         self.etape=None
          self.labelNom=Label(self,text="",bg="#AC30D6")
          self.labelNom.grid(row=0,column=0)
          self.labelTache=Label(self,text="Tache a ajouter ",bg="#AC30D6")
@@ -163,22 +166,36 @@ class FrameEtape(Frame):
          self.entryTache.grid(column=1,row=1)
          self.buttonAjouterTache=Button(self,text="Ajouter",command=self.ajouterTache)
          self.buttonAjouterTache.grid(column=2,row=1,padx=10)
-         self.frameTaches=Frame(self,width=150,height=100,bg="#AC30D6",relief=GROOVE,bd=5)
-         self.frameTaches.grid_propagate(True)
+         self.frameTaches=Frame(self,width=300,height=160,bg="#AC30D6",relief=GROOVE,bd=5)
+         
          self.labelTachesTitre=Label(self.frameTaches,width=15,text="Taches",bd=4,bg="#AC30D6",relief=RIDGE)
          self.labelTachesTitre.grid(column=0,row=0,padx=10)
-         self.frameTaches.grid(column=0,row=2)
+         
+         self.framePrerequis=Frame(self,width=150,height=50,bg="#AC30D6",relief=GROOVE,bd=5)
+         
+         self.labelTachePrerequis=Label(self.framePrerequis,text="Prerequis",bg="#AC30D6")
+         self.prerequisAjouter = StringVar(self)
+         self.prerequisAjouter.set("one") # default value
+         self.prerequisCombo = OptionMenu(self, self.prerequisAjouter, "one", "two", "three")
+         self.prerequisCombo.grid(row=2,column=1)
+         self.listboxPrerequis=Listbox(self.framePrerequis,bg="#AC30D6",height=3)
+         self.listboxPrerequis.grid(column=0,row=1)
+         self.labelTachePrerequis.grid(column=0,row=0)
+         self.framePrerequis.grid(column=0,row=2)
+         self.frameTaches.grid(column=0,row=4)
          self.scrollbar = Scrollbar(self, orient=VERTICAL)
-         self.scrollbar.grid(column=1,row=2)
+         self.scrollbar.grid(column=1,row=4)
          self.listboxTaches=Listbox(self.frameTaches,bg="#AC30D6",yscrollcommand=self.scrollbar.set)
          self.listboxTaches.grid(column=0,row=1)
          self.scrollbar.config(command=self.listboxTaches.yview)
          self.buttonEnleverTache=Button(self,text="Enlever",command=self.enleverTache)
-         self.buttonEnleverTache.grid(column=2,row=2)
+         self.buttonEnleverTache.grid(column=2,row=4)
     def ajouterTache(self):
         if(self.entryTache.get()!=""):
             self.listboxTaches.insert(END,self.entryTache.get())
-            self.vue.listeTaches.append(self.entryTache.get())
+            nouvelleTache={"Nom":"","Tache":"","Priorite":"","Prerequis":""}
+            nouvelleTache["Nom"]=self.entryTache.get()
+            self.vue.listeEtape[self.etape]["Taches"].append(nouvelleTache)
     def enleverTache(self):
         pass
          
