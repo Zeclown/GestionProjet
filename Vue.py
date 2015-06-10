@@ -19,6 +19,7 @@ class Vue():
         self.frameProjetSuivant=FrameProjetSuivant(self.canevas,self,bg="#AC30D6",height=self.hauteur-18,width=self.longueur-18,bd=9,relief=GROOVE)
         self.frameEtape=FrameEtape(self.canevas,self,bg="#AC30D6",height=self.hauteur-18,width=self.longueur-18,bd=9,relief=GROOVE)
         self.creerFrameOuvrirProjet()
+        self.creerFrameLoadProjet()
         
         self.frameAffiche=None
     def menu(self):
@@ -43,7 +44,7 @@ class Vue():
            self.labelNom.pack()
            self.listeProjet=Listbox(self.frameOuvrirProjet)
            self.listeProjet.pack()
-           self.buttonLoad = Button(self.frameOuvrirProjet, text = "LOAD", bg="pink")
+           self.buttonLoad = Button(self.frameOuvrirProjet, text = "LOAD", bg="pink", command=self.frameLoadProjet)
            self.buttonLoad.pack(side=LEFT,padx=20)
            self.buttonDelete = Button(self.frameOuvrirProjet, text = "DELETE", command=self.deleteProjet)
            self.buttonDelete.pack(side=LEFT,padx=20)
@@ -52,18 +53,31 @@ class Vue():
         for nom in nomDeProjets:
             self.listeProjet.insert(END, nom)
         #print(nomDeProjets)
-        self.swapper(self.frameOuvrirProjet)   
+        self.swapper(self.frameOuvrirProjet)
     
     def deleteProjet(self):
-        delProjet = self.listeProjet.get(self.listeProjet.curselection())
+        delProjet = self.listeProjet.get(self.listeProjet.index(ACTIVE))
         print(delProjet)
-        delProjet = str(delProjet[1])
-        self.parent.modele.effacerProjet(delProjet) #####ICI!!!!!!!!!!!!!!!!!!!!!
+        delProjetProjet = str(delProjet[1])
+        self.parent.modele.effacerProjet(delProjetProjet) #####ICI!!!!!!!!!!!!!!!!!!!!!
         self.listeProjet.delete(self.listeProjet.index(ACTIVE))
         print(delProjet)
         print("Project successfully deleted")
     
-
+    def creerFrameLoadProjet(self):
+        self.frameLoadProjet = Frame(self.canevas,width=200, height=200, bg="red")
+        self.labelLoad=Label(self.frameLoadProjet, text="Projets", bg="#AC30D6")
+        self.labelLoad.pack()
+        self.ListeEtape=Listbox(self.frameLoadProjet)
+        self.ListeEtape.pack()
+        
+    def frameLoadProjet(self):
+        Projet = self.listeProjet.get(self.listeProjet.index(ACTIVE))
+        #self.labelLoad=(frameLoad)
+        print(Projet)
+        self.swapper(self.frameLoadProjet)
+        
+        
     def ouvrirEtape(self,etape):
         self.frameEtape.labelNom.config(text=etape["Nom"])
         taches=etape["Taches"]

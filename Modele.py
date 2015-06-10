@@ -56,5 +56,6 @@ class Modele():
 
     
     def effacerProjet(self, delProjet):
-        self.c.execute("DELETE FROM Projets WHERE id=(?)", (delProjet))
+        self.c.execute("DELETE FROM Projets WHERE id=" + delProjet)
+        self.conn.commit()
 
