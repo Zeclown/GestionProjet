@@ -27,6 +27,10 @@ class Modele():
                 commande="INSERT INTO Membres(id,nom,projetId) VALUES(NULL,"+"'"+str(membre)+"'"+","+str(id[0])+")"
                 self.c.execute(commande)
                 print(commande)
+        return id
+    def getListeMembres(self,id):
+        self.c.execute("SELECT nom FROM Membres WHERE projetId="+str(id[0]))
+        return self.c.fetchall()
         
     def updateProjet(self,projet):
         if(projet["id"]):
@@ -36,16 +40,17 @@ class Modele():
             id=self.c.fetchone()
             id=id[0]
         if(projet["etapes"]):
-            self.c.execute("DELETE FROM Etapes WHERE projetId=" + id)
+            self.c.execute("DELETE FROM Etapes WHERE projetId=" + str(id[0]))
             for i in projet["etapes"]:
-                self.c.execute("INSERT INTO Etapes(id,projetId,nom,duree,priorite) VALUES(NULL,"+id+",'" + i[0]+","+ i[1]+","+i[2]+")")
+                self.c.execute("INSERT INTO Etapes(id,projetId,nom,duree,priorite) VALUES(NULL,"+str(id[0])+",'" + i[0]+","+ i[1]+","+i[2]+")")
                 self.c.execute("SELECT last_insert_rowid() FROM Etapes")
                 idEtape=self.c.fetchone()
                 idEtape=idEtape[0]
                 if(i[3]):
                     self.c.execute("DELETE FROM Taches WHERE etapeId=" + id)
-                    for i in projet["etapes"]:
-                        self.c.execute("INSERT INTO Taches(id,etapeId,nom,duree,sprintId,responsableId,completion,priorite) VALUES(NULL,"+idEtape+",'" + i[0]+","+ i[1]+","+i[2]+")")
+                    for j in projet["etapes"]:
+                        for i in j["taches"]:
+                            self.c.execute("INSERT INTO Taches(id,etapeId,nom,duree,sprintId,responsableId,completion,priorite) VALUES(NULL,"+idEtape+",'" + i[0]+","+ i[1]+","+i[2]+")")
                         
          
         
