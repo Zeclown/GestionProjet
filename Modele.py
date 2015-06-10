@@ -63,4 +63,19 @@ class Modele():
     def effacerProjet(self, delProjet):
         self.c.execute("DELETE FROM Projets WHERE id=" + delProjet)
         self.conn.commit()
-
+        
+    def afficherProjet(self):
+        self.c.execute("SELECT * FROM Projets")
+        return (self.c.fetchall())
+    def afficherMembres(self):
+        self.c.execute("SELECT * FROM Membres WHERE projetId = 1")
+        return (self.c.fetchall())
+    def afficherEtapes(self):
+        self.c.execute("SELECT * FROM Etapes WHERE projetId = 1")
+        return (self.c.fetchall())
+    def afficherSprints(self):
+        self.c.execute("SELECT * FROM Sprints WHERE projetId = 1")
+        return (self.c.fetchall()) 
+    def afficherTaches(self):
+        self.c.execute("SELECT * FROM Taches WHERE sprintId = 1")
+        return (self.c.fetchall())

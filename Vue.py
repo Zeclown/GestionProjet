@@ -67,16 +67,26 @@ class Vue():
         print("Project successfully deleted")
     
     def creerFrameLoadProjet(self):
-        self.frameLoadProjet = Frame(self.canevas,width=200, height=200, bg="red")
+        self.frameLoadProjet = Frame(self.canevas,width=200, height=200, bg="white")
         self.labelLoad=Label(self.frameLoadProjet, text="Projets", bg="#AC30D6")
         self.labelLoad.pack()
-        self.ListeEtape=Listbox(self.frameLoadProjet)
-        self.ListeEtape.pack()
+        #self.ListeEtape=Listbox(self.frameLoadProjet)
+        #self.ListeEtape.pack()
         
     def frameLoadProjet(self):
         Projet = self.listeProjet.get(self.listeProjet.index(ACTIVE))
         #self.labelLoad=(frameLoad)
+        Projet = self.parent.modele.afficherProjet()
         print(Projet)
+        Membres = self.parent.modele.afficherMembres()
+        print(Membres)
+        Etapes = self.parent.modele.afficherEtapes()
+        print(Etapes)
+        Sprints = self.parent.modele.afficherSprints()
+        print(Sprints)
+        Taches = self.parent.modele.afficherTaches()
+        print(Taches)
+        
         self.swapper(self.frameLoadProjet)
         
         
