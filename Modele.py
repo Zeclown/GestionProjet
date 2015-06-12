@@ -68,14 +68,14 @@ class Modele():
         self.c.execute("SELECT * FROM Projets WHERE id=" + projetID)
         return (self.c.fetchall())
     def afficherMembres(self, projetID):
-        self.c.execute("SELECT * FROM Membres WHERE projetId=" + projetID)
+        self.c.execute("SELECT nom FROM Membres WHERE projetId=" + projetID)
         return (self.c.fetchall())
     def afficherEtapes(self, projetID):
-        self.c.execute("SELECT * FROM Etapes WHERE projetId=" + projetID)
+        self.c.execute("SELECT nom FROM Etapes WHERE projetId=" + projetID)
         return (self.c.fetchall())
     def afficherSprints(self, projetID):
-        self.c.execute("SELECT * FROM Sprints WHERE projetId=" + projetID)
+        self.c.execute("SELECT nom FROM Sprints WHERE projetId=" + projetID)
         return (self.c.fetchall()) 
     def afficherTaches(self, projetID):
-        self.c.execute("SELECT * FROM Taches WHERE sprintId=" + projetID)
+        self.c.execute("SELECT nom FROM Taches WHERE sprintId=(SELECT id FROM Sprints WHERE projetId=" + projetID + ")")
         return (self.c.fetchall())

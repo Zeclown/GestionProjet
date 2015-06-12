@@ -1,3 +1,8 @@
+#########################################################
+#                                                       #
+#  Le bouton pour editer les projets est a la ligne 88  #
+#                                                       #
+#########################################################
 from tkinter import *
 import tkinter as tk
 class Vue():
@@ -68,18 +73,24 @@ class Vue():
     
     def creerFrameLoadProjet(self):
         self.frameLoadProjet = Frame(self.canevas,width=200, height=200)
-        self.labelLoad=Label(self.frameLoadProjet, text="Projets", bg="#AC30D6")
-        self.labelLoad.grid()
+        self.labelLoad=Label(self.frameLoadProjet, text="Projets")
+        self.labelLoad.grid(sticky=W, column=0, row=0)
         self.lNomProjet = Label(self.frameLoadProjet, text="Nom du projet: ")
-        self.lNomProjet.grid()
+        self.lNomProjet.grid(sticky=W, column=0, row=1)
         self.lMembres = Label(self.frameLoadProjet, text="Membres: ")
-        self.lMembres.grid()
+        self.lMembres.grid(sticky=W, column=0, row=2)
         self.lEtapes = Label(self.frameLoadProjet, text="Etapes: ")
-        self.lEtapes.grid()
+        self.lEtapes.grid(sticky=W, column=0, row=3)
         self.lSprints = Label(self.frameLoadProjet, text="Sprints: ")
-        self.lSprints.grid()
+        self.lSprints.grid(sticky=W, column=0, row=4)
         self.lTaches = Label(self.frameLoadProjet, text="Taches: ")
-        self.lTaches.grid()
+        self.lTaches.grid(sticky=W, column=0, row=5)
+        self.lDebut = Label(self.frameLoadProjet, text="Debut: ")
+        self.lDebut.grid(sticky=W, column=0, row=6)
+        self.lFin = Label(self.frameLoadProjet, text="Fin: ")
+        self.lFin.grid(sticky=W, column=1, row=6)
+        self.bEdit = Button(self.frameLoadProjet, text="Edit")
+        self.bEdit.grid(sticky=W+E, column=0, row=8)
         #print("ICI", self.parent.modele.listeProjet())
         #self.ListeEtape=Listbox(self.frameLoadProjet)
         #self.ListeEtape.pack()
@@ -89,7 +100,7 @@ class Vue():
         #print("Rici", projetSelecter[1])
         #self.labelLoad=(frameLoad)
         Projet = self.parent.modele.afficherProjet(str(projetSelecter[1]))
-        print(Projet)
+        print(Projet[0][1])
         Membres = self.parent.modele.afficherMembres(str(projetSelecter[1]))
         print(Membres)
         Etapes = self.parent.modele.afficherEtapes(str(projetSelecter[1]))
