@@ -64,18 +64,18 @@ class Modele():
         self.c.execute("DELETE FROM Projets WHERE id=" + delProjet)
         self.conn.commit()
         
-    def afficherProjet(self):
-        self.c.execute("SELECT * FROM Projets")
+    def afficherProjet(self, projetID):
+        self.c.execute("SELECT * FROM Projets WHERE id=" + projetID)
         return (self.c.fetchall())
-    def afficherMembres(self):
-        self.c.execute("SELECT * FROM Membres WHERE projetId = 1")
+    def afficherMembres(self, projetID):
+        self.c.execute("SELECT * FROM Membres WHERE projetId=" + projetID)
         return (self.c.fetchall())
-    def afficherEtapes(self):
-        self.c.execute("SELECT * FROM Etapes WHERE projetId = 1")
+    def afficherEtapes(self, projetID):
+        self.c.execute("SELECT * FROM Etapes WHERE projetId=" + projetID)
         return (self.c.fetchall())
-    def afficherSprints(self):
-        self.c.execute("SELECT * FROM Sprints WHERE projetId = 1")
+    def afficherSprints(self, projetID):
+        self.c.execute("SELECT * FROM Sprints WHERE projetId=" + projetID)
         return (self.c.fetchall()) 
-    def afficherTaches(self):
-        self.c.execute("SELECT * FROM Taches WHERE sprintId = 1")
+    def afficherTaches(self, projetID):
+        self.c.execute("SELECT * FROM Taches WHERE sprintId=" + projetID)
         return (self.c.fetchall())
