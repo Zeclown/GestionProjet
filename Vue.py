@@ -113,7 +113,7 @@ class FrameProjetSuivant(Frame):
         self.buttonEnleverEtape.grid(column=2,row=2)
         self.buttonModifierEtape=Button(self,text="Ouvrir",command=self.ouvrirEtape)
         self.buttonModifierEtape.grid(column=3,row=2)
-        
+        self.buttonSauvegarder=Button(self,text="Sauvegarder et Quitter",command=self.ouvrirEtape)
         
         self.labelEtapeChoisie=Label(self,text="")
         self.spinBoxPriorite=Spinbox(self,from_=0, to=10)
