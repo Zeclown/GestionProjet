@@ -1,4 +1,10 @@
+#########################################################
+#                                                       #
+#  Le bouton pour editer les projets est a la ligne 88  #
+#                                                       #
+#########################################################
 from tkinter import *
+import tkinter as tk
 class Vue():
     def __init__(self,parent,longueur,hauteur):
         self.parent=parent
@@ -7,6 +13,7 @@ class Vue():
         self.listeMembres=[]
         self.listeEtape=[]
         self.listeTache=[]
+        self.id=None
         self.root=Tk()
         self.root.resizable(0,0)
         self.root.title("Project Manager 1337")
@@ -19,6 +26,7 @@ class Vue():
         self.frameProjetSuivant=FrameProjetSuivant(self.canevas,self,bg="#AC30D6",height=self.hauteur-18,width=self.longueur-18,bd=9,relief=GROOVE)
         self.frameEtape=FrameEtape(self.canevas,self,bg="#AC30D6",height=self.hauteur-18,width=self.longueur-18,bd=9,relief=GROOVE)
         self.creerFrameOuvrirProjet()
+        self.creerFrameLoadProjet()
         
         self.frameAffiche=None
     def menu(self):
@@ -43,7 +51,7 @@ class Vue():
            self.labelNom.pack()
            self.listeProjet=Listbox(self.frameOuvrirProjet)
            self.listeProjet.pack()
-           self.buttonLoad = Button(self.frameOuvrirProjet, text = "LOAD", bg="pink")
+           self.buttonLoad = Button(self.frameOuvrirProjet, text = "LOAD", bg="pink", command=self.frameLoadProjet)
            self.buttonLoad.pack(side=LEFT,padx=20)
            self.buttonDelete = Button(self.frameOuvrirProjet, text = "DELETE", command=self.deleteProjet)
            self.buttonDelete.pack(side=LEFT,padx=20)
@@ -52,23 +60,74 @@ class Vue():
         for nom in nomDeProjets:
             self.listeProjet.insert(END, nom)
         #print(nomDeProjets)
-        self.swapper(self.frameOuvrirProjet)   
+        self.swapper(self.frameOuvrirProjet)
     
     def deleteProjet(self):
-        delProjet = self.listeProjet.get(self.listeProjet.curselection())
+        delProjet = self.listeProjet.get(self.listeProjet.index(ACTIVE))
         print(delProjet)
-        delProjet = str(delProjet[1])
-        self.parent.modele.effacerProjet(delProjet) #####ICI!!!!!!!!!!!!!!!!!!!!!
+        delProjetProjet = str(delProjet[1])
+        self.parent.modele.effacerProjet(delProjetProjet) #####ICI!!!!!!!!!!!!!!!!!!!!!
         self.listeProjet.delete(self.listeProjet.index(ACTIVE))
         print(delProjet)
         print("Project successfully deleted")
     
-
+    def creerFrameLoadProjet(self):
+        self.frameLoadProjet = Frame(self.canevas,width=200, height=200)
+        self.labelLoad=Label(self.frameLoadProjet, text="Projets")
+        self.labelLoad.grid(sticky=W, column=0, row=0)
+        self.lNomProjet = Label(self.frameLoadProjet, text="Nom du projet: ")
+        self.lNomProjet.grid(sticky=W, column=0, row=1)
+        self.lMembres = Label(self.frameLoadProjet, text="Membres: ")
+        self.lMembres.grid(sticky=W, column=0, row=2)
+        self.lEtapes = Label(self.frameLoadProjet, text="Etapes: ")
+        self.lEtapes.grid(sticky=W, column=0, row=3)
+        self.lSprints = Label(self.frameLoadProjet, text="Sprints: ")
+        self.lSprints.grid(sticky=W, column=0, row=4)
+        self.lTaches = Label(self.frameLoadProjet, text="Taches: ")
+        self.lTaches.grid(sticky=W, column=0, row=5)
+        self.lDebut = Label(self.frameLoadProjet, text="Debut: ")
+        self.lDebut.grid(sticky=W, column=0, row=6)
+        self.lFin = Label(self.frameLoadProjet, text="Fin: ")
+        self.lFin.grid(sticky=W, column=1, row=6)
+        self.bEdit = Button(self.frameLoadProjet, text="Edit")
+        self.bEdit.grid(sticky=W+E, column=0, row=8)
+        #print("ICI", self.parent.modele.listeProjet())
+        #self.ListeEtape=Listbox(self.frameLoadProjet)
+        #self.ListeEtape.pack()
+        
+    def frameLoadProjet(self):
+        projetSelecter = self.listeProjet.get(self.listeProjet.index(ACTIVE))
+        #print("Rici", projetSelecter[1])
+        #self.labelLoad=(frameLoad)
+        Projet = self.parent.modele.afficherProjet(str(projetSelecter[1]))
+        print(Projet[0][1])
+        self.lNomProjet.config(text="Projet : " + Projet[0][1])
+        Membres = self.parent.modele.afficherMembres(str(projetSelecter[1]))
+        listeMembres=""
+        for i in Membres:
+            listeMembres+=i[0] +" - "
+        self.lMembres.config(text="Membres: "+ listeMembres)
+        print(listeMembres)
+        Etapes = self.parent.modele.afficherEtapes(str(projetSelecter[1]))
+        print(Etapes)
+        Sprints = self.parent.modele.afficherSprints(str(projetSelecter[1]))
+        print(Sprints)
+        Taches = self.parent.modele.afficherTaches(str(projetSelecter[1]))
+        print(Taches)
+        
+        self.swapper(self.frameLoadProjet)
+        
+        
     def ouvrirEtape(self,etape):
-        self.frameEtape.labelNom.config(text=etape["Nom"])
-        taches=etape["Taches"]
+        self.frameEtape.labelNom.config(text=self.listeEtape[etape]["nom"])
+        taches=self.listeEtape[etape]["taches"]
+        self.frameEtape.etape=etape
         for tache in taches:
-            self.frameEtape.listeboxTache.insert(END,tache["Nom"])
+            self.frameEtape.listboxTaches.insert(END,tache["nom"])
+        for membre in self.parent.modele.getListeMembres(self.id):
+            self.frameEtape.optionMenuMembres['menu'].add_command(label=membre, command=tk._setit(self.frameEtape.membres, membre))
+        self.swapper(self.frameEtape)
+        
          
         
         
@@ -104,6 +163,7 @@ class FrameProjetSuivant(Frame):
         self.labelEtapeTitre=Label(self.frameEtape,width=15,text="Etapes",bd=4,bg="#AC30D6",relief=RIDGE)
         self.labelEtapeTitre.grid(column=0,row=0,padx=10)
         self.frameEtape.grid(column=0,row=0)
+
         self.scrollbar = Scrollbar(self, orient=VERTICAL)
         self.scrollbar.grid(column=1,row=0)
         self.listboxEtape=Listbox(self.frameEtape,bg="#AC30D6",yscrollcommand=self.scrollbar.set)
@@ -113,31 +173,39 @@ class FrameProjetSuivant(Frame):
         self.buttonEnleverEtape.grid(column=2,row=2)
         self.buttonModifierEtape=Button(self,text="Ouvrir",command=self.ouvrirEtape)
         self.buttonModifierEtape.grid(column=3,row=2)
-        self.buttonSauvegarder=Button(self,text="Sauvegarder et Quitter",command=self.ouvrirEtape)
-        
+        self.buttonSauvegardeQuitter=Button(self,text="Savegarder et quitter",command=self.updateProjet)
+        self.buttonSauvegardeQuitter.grid(column=3,row=1)
         self.labelEtapeChoisie=Label(self,text="")
         self.spinBoxPriorite=Spinbox(self,from_=0, to=10)
         self.labelPriorite=Label(self,text="Priorite")
-        
-        
+        self.labelPriorite.grid(column=0,row=3)
+        self.spinBoxPriorite.grid(column=1,row=3)
+    def updateProjet(self):
+        self.projet={"id":self.vue.id,"etapes":""}
+        self.projet["etapes"]=self.vue.listeEtape
+        self.vue.parent.modele.updateProjet(self.projet)
+        self.vue.menu()   
     def ajouterEtape(self):
         if(self.entryEtape.get()!=""):
             self.listboxEtape.insert(END,self.entryEtape.get())
-            self.vue.listeEtape.append({"Nom":self.entryEtape.get(),"Taches":[]})
-            
-        self.ouvrirEtape(len(self.vue.listeEtape)-1)
+            self.vue.listeEtape.append({"nom":self.entryEtape.get(),"priorite":self.spinBoxPriorite.get(),"taches":[]})
+        self.listboxEtape.activate(self.listboxEtape.index(ACTIVE))    
+        self.ouvrirEtape()
     def enleverEtape(self):
-        if(self.listeboxEtape.index(ACTIVE)):
+        if(self.listboxEtape.index(ACTIVE)):
             self.vue.listeEtape.pop(self.listboxEtape.index(ACTIVE))
             self.listboxEtape.delete(self.listboxEtape.index(ACTIVE))
-    def ouvrirEtape(self,index):
-        self.etapeChoisie=self.vue.listeEtape[index]
+    def ouvrirEtape(self):
+        self.etapeChoisie=self.listboxEtape.index(ACTIVE)
         self.vue.ouvrirEtape(self.etapeChoisie)
         
         
 class FrameEtape(Frame):
     def __init__(self,master,vue,**kw):
          Frame.__init__(self,master,**kw) #init de la classe dont j'herite
+         self.vue=vue
+         self.prerequis=[]
+         self.etape=None
          self.labelNom=Label(self,text="",bg="#AC30D6")
          self.labelNom.grid(row=0,column=0)
          self.labelTache=Label(self,text="Tache a ajouter ",bg="#AC30D6")
@@ -146,24 +214,69 @@ class FrameEtape(Frame):
          self.entryTache.grid(column=1,row=1)
          self.buttonAjouterTache=Button(self,text="Ajouter",command=self.ajouterTache)
          self.buttonAjouterTache.grid(column=2,row=1,padx=10)
-         self.frameTaches=Frame(self,width=150,height=100,bg="#AC30D6",relief=GROOVE,bd=5)
-         self.frameTaches.grid_propagate(True)
+         self.frameTaches=Frame(self,width=300,height=160,bg="#AC30D6",relief=GROOVE,bd=5)
+         
          self.labelTachesTitre=Label(self.frameTaches,width=15,text="Taches",bd=4,bg="#AC30D6",relief=RIDGE)
          self.labelTachesTitre.grid(column=0,row=0,padx=10)
-         self.frameTaches.grid(column=0,row=2)
+         self.labelPriorite=Label(self,text="Priorite",bg="#AC30D6")
+         self.spinBoxPriorite=Spinbox(self,from_=1 ,to=10)
+         self.spinBoxPriorite.grid(column=3,row=2)
+         self.labelProprietaire=Label(self,text="Membre Proprietaire",bg="#AC30D6")
+         self.labelProprietaire.grid(column=3,row=0)
+         self.membres = StringVar(self)
+         self.membres.set("") # initial value
+         self.optionMenuMembres = OptionMenu(self, self.membres, "",)
+         self.optionMenuMembres.grid(column=3,row=1)
+         self.labelPriorite.grid(column=3,row=2,sticky=N)
+         self.buttonAjouterPrerequis=Button(self,text="Ajouter Prerequis",command=self.ajouterPrerequis)
+         self.buttonEnleverPrerequis=Button(self,text="Enlever Prerequis",command=self.enleverPrerequis)
+         self.buttonEnleverPrerequis.grid(column=1,row=2)
+         self.buttonAjouterPrerequis.grid(column=2,row=2,padx=10)
+         self.labelDuree=Label(self,text="Duree",bg="#AC30D6")
+         self.entryDuree=Entry(self)
+         self.labelDuree.grid(column=4,row=2 ,sticky=N)
+         self.entryDuree.grid(column=4,row=2)
+         self.framePrerequis=Frame(self,width=150,height=50,bg="#AC30D6",relief=GROOVE,bd=5)
+         self.labelTachePrerequis=Label(self.framePrerequis,text="Prerequis",bg="#AC30D6")
+         self.listboxPrerequis=Listbox(self.framePrerequis,bg="#AC30D6",height=3)
+         self.listboxPrerequis.grid(column=0,row=1)
+         self.labelTachePrerequis.grid(column=0,row=0)
+         self.framePrerequis.grid(column=0,row=2)
+         self.frameTaches.grid(column=0,row=4)
          self.scrollbar = Scrollbar(self, orient=VERTICAL)
-         self.scrollbar.grid(column=1,row=2)
+         self.scrollbar.grid(column=1,row=4)
          self.listboxTaches=Listbox(self.frameTaches,bg="#AC30D6",yscrollcommand=self.scrollbar.set)
          self.listboxTaches.grid(column=0,row=1)
          self.scrollbar.config(command=self.listboxTaches.yview)
          self.buttonEnleverTache=Button(self,text="Enlever",command=self.enleverTache)
-         self.buttonEnleverTache.grid(column=2,row=2)
+         self.buttonEnleverTache.grid(column=2,row=4)
+         self.buttonFinirEtape=Button(self,text="Finaliser Etape",command=self.suivant)
+         self.buttonFinirEtape.grid(column=0,row=5)
+    def ajouterPrerequis(self):
+        self.prerequis.append(self.vue.listeEtape[self.etape]["taches"][self.listboxTaches.index(ACTIVE)])
+        self.listboxPrerequis.insert(END,self.listboxTaches.get(self.listboxTaches.curselection()))
+    def enleverPrerequis(self):
+        self.prerequis.pop(self.listboxPrerequis.index(ACTIVE))
+        self.listboxPrerequis.delete(self.listboxPrerequis.index(ACTIVE))
     def ajouterTache(self):
         if(self.entryTache.get()!=""):
             self.listboxTaches.insert(END,self.entryTache.get())
-            self.vue.listeTaches.append(self.entryTache.get())
+            nouvelleTache={"nom":"NULL","priorite":"NULL","prerequis":"NULL","proprietaire":"NULL","sprint":"NULL","completion":0}
+            nouvelleTache["nom"]=self.entryTache.get()
+
+            nouvelleTache["proprietaire"]=self.vue.parent.modele.getIdMembre(self.vue.id,self.membres.get())
+            nouvelleTache["duree"]=self.entryDuree.get()
+            nouvelleTache["priorite"]=self.spinBoxPriorite.get()
+            if(len(self.listboxPrerequis.get(0, END))>0):
+                nouvelleTache["prerequis"]=self.prerequis
+            self.vue.listeEtape[self.etape]["taches"].append(nouvelleTache)
     def enleverTache(self):
-        pass
+        self.listboxTaches.delete(self.listboxTaches.index(ACTIVE))
+    def suivant(self):
+        self.listboxPrerequis.delete(0, END)
+        self.listboxTaches.delete(0,END)
+        self.vue.swapper(self.vue.frameProjetSuivant)  
+        
          
                
 class FrameProjet(Frame):
@@ -218,15 +331,17 @@ class FrameProjet(Frame):
         self.spinBoxMois1.grid(column=0,row=6)
         self.spinBoxDate1=Spinbox(self,from_=1 ,to=self.joursParMois[self.spinBoxMois1.get()])
         self.spinBoxDate1.grid(column=1,row=6)
-        self.buttonSuivant=Button(self,text="Debut du Projet: ",bg="#AC30D6",command=self.suivant)
+        self.buttonSuivant=Button(self,text="Suivant",bg="#AC30D6",command=self.suivant)
         self.buttonSuivant.grid(column=0,row=7)
-        self.buttonSauvegarderProjet=Button(self,text="Sauvegarde du Projet: ",bg="#AC30D6",command=self.sauvegarde)
+        self.buttonSauvegarderProjet=Button(self,text="Sauvegarder et quitter: ",bg="#AC30D6",command=self.sauvegarde)
         self.buttonSauvegarderProjet.grid(column=1,row=7)
     def suivant(self):
         self.projet["nom"]=self.entryNom.get()
         self.projet["membres"]=self.listboxMembres.get(0, END)
-        self.projet["Debut Projet"]=(self.spinBoxDate.get(),self.spinBoxMois.get())
-        self.projet["Fin Projet"]=(self.spinBoxDate1.get(),self.spinBoxMois1.get())
+        self.projet["debut Projet"]=(self.spinBoxDate.get(),self.spinBoxMois.get())
+        self.projet["fin Projet"]=(self.spinBoxDate1.get(),self.spinBoxMois1.get())
+        self.vue.id=self.vue.parent.modele.sauvegardeNouveau(self.projet)
+        self.projet.clear()
         self.vue.swapper(self.vue.frameProjetSuivant)   
     def dateUpdate(self):
         self.spinBoxDate1.config(from_=1 ,to=self.joursParMois[self.spinBoxMois1.get()])  
@@ -242,8 +357,28 @@ class FrameProjet(Frame):
     def sauvegarde(self):
         self.projet["nom"]=self.entryNom.get()
         self.projet["membres"]=self.listboxMembres.get(0, END)
-        self.projet["Debut Projet"]=(self.spinBoxDate.get(),self.spinBoxMois.get())
-        self.projet["Fin Projet"]=(self.spinBoxDate1.get(),self.spinBoxMois1.get())
-        self.vue.parent.modele.sauvegardeNouveau(self.projet)   
-        
+        self.projet["debut Projet"]=(self.spinBoxDate.get(),self.spinBoxMois.get())
+        self.projet["fin Projet"]=(self.spinBoxDate1.get(),self.spinBoxMois1.get())
+        self.vue.id=self.vue.parent.modele.sauvegardeNouveau(self.projet)
+        self.projet.clear()
+        self.vue.menu()
+    def update(self):
+        self.projet["nom"]=self.entryNom.get()
+        self.projet["membres"]=self.listboxMembres.get(0, END)
+        self.projet["debut Projet"]=(self.spinBoxDate.get(),self.spinBoxMois.get())
+        self.projet["fin Projet"]=(self.spinBoxDate1.get(),self.spinBoxMois1.get())
+        self.projet["id"]=self.vue.id 
+        self.vue.parent.modele.updateProjet(self.projet)
+        self.projet.clear()
+        self.vue.swapper(self.vue.frameProjetSuivant)
+    def sauvegardeUpdate(self):
+        self.projet["nom"]=self.entryNom.get()
+        self.projet["membres"]=self.listboxMembres.get(0, END)
+        self.projet["debut Projet"]=(self.spinBoxDate.get(),self.spinBoxMois.get())
+        self.projet["fin Projet"]=(self.spinBoxDate1.get(),self.spinBoxMois1.get())
+        self.projet["id"]=self.vue.id 
+        self.vue.parent.modele.updateProjet(self.projet)
+        self.projet.clear()
+        self.vue.menu()
+         
 
